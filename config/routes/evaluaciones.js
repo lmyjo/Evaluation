@@ -1,4 +1,4 @@
-const handlers = require('../../lib/handlers');
+const handlers = require('../../lib/controllers/handlers');
 
 module.exports = [
   {
