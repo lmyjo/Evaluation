@@ -2,13 +2,13 @@ const Lab = require('lab');
 const assert = require('assert');
 const sinon = require('sinon');
 const server = require('../server');
-const util = require('../lib/util')
+const evaluator = require('../lib/models/evaluator');
 const lab = exports.lab = Lab.script();
 
 lab.experiment('For evaluations without access token', function (){
 
   lab.before(function (done) {
-    sinon.stub(util, 'getLastEvaluation', function (req, headers, callback) {
+    sinon.stub(evaluator, 'getLastEvaluation', function (req, headers, callback) {
       const getLastUnauth = require('./mocks/getLastUnauth');
       callback(null,getLastUnauth.response,getLastUnauth.payload);
     });
@@ -16,7 +16,7 @@ lab.experiment('For evaluations without access token', function (){
   });
 
   lab.after(function (done) {
-    util.getLastEvaluation.restore();
+    evaluator.getLastEvaluation.restore();
     done();
   });
 
@@ -34,7 +34,7 @@ lab.experiment('For evaluations with access token', function (){
 
 
   lab.before(function (done) {
-    sinon.stub(util, 'getLastEvaluation', function (req, headers, callback) {
+    sinon.stub(evaluator, 'getLastEvaluation', function (req, headers, callback) {
       const getLasteval = require('./mocks/getLastEval');
       callback(null,getLasteval.response,getLasteval.payload);
     });
@@ -42,7 +42,7 @@ lab.experiment('For evaluations with access token', function (){
   });
 
   lab.after(function (done) {
-    util.getLastEvaluation.restore();
+    evaluator.getLastEvaluation.restore();
     done();
   });
 
