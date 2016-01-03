@@ -62,3 +62,61 @@ lab.experiment('For evaluations with access token', function (){
     });
   });
 });
+
+lab.experiment('For creating evaluations without access token', function () {
+  lab.before(function (done) {
+    sinon.stub(evaluator, 'createEvaluation', function (req, headers, callback) {
+      const getLastUnauth = require('./mocks/getLastUnauth');
+      callback(null,getLastUnauth.response,getLastUnauth.payload);
+    });
+    done();
+  });
+
+  lab.after(function (done) {
+    evaluator.createEvaluation.restore();
+    done();
+  });
+
+  lab.test('it should answer with 401 Unauthorized',  function (done) {
+    var options = {
+      method: 'post',
+      url:'/api/projects/5663e14fd43f6d873267332b/evaluaciones'
+    };
+    server.inject(options, function(res) {
+      assert.equal(res.statusCode, 401);
+      assert.equal(res.result.error, 'Unauthorized');
+      done();
+    });
+  });
+});
+
+lab.experiment('For evaluations with access token', function (){
+  lab.before(function (done) {
+    sinon.stub(evaluator, 'createEvaluation', function (req, headers, callback) {
+      const postEval = require('./mocks/postEval');
+      callback(null,postEval.response,postEval.payload);
+    });
+    done();
+  });
+
+  lab.after(function (done) {
+    evaluator.createEvaluation.restore();
+    done();
+  });
+
+  lab.test('it should answer with 202 Accepted', function (done) {
+
+    var options = {
+      method: 'POST',
+      headers: {
+        'Authorization': 'v33XBdfM8HaVmFogyc3I2gEoEmiSUkHbPn6G1IVWiHZoxCaMCdTDeLQUgZF9IHJO'
+      },
+      url: '/api/projects/56863bade67b5410003157b8/evaluaciones'
+    };
+
+    server.inject(options, function(res) {
+      assert.equal(res.statusCode, 202);
+      done();
+    });
+  });
+});
