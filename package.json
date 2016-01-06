@@ -1,6 +1,6 @@
 {
   "name": "evaluation",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Evaluation micro service for InvestmentsAPI",
   "main": "server.js",
   "scripts": {
