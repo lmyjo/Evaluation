@@ -1,20 +1,23 @@
+'use strict';
+
 const Hapi = require('hapi');
 const config  = require('./config/config');
 const routes  = require('./config/routes');
 
-const server = new Hapi.Server();
-
-server.connection({
+const server = Hapi.server({
   host: config.get('serviceHost'),
   port: config.get('servicePort')
 });
 
 server.route(routes);
 
+const init = async () => {
+  await server.start();
+  console.log('Server running at: ', server.info.uri);
+}
+
 if (!module.parent) {
-  server.start(function starter() {
-    console.log('Server running at: ', server.info.uri);
-  });
+  init();
 }
 
 module.exports = server;
